@@ -1,0 +1,666 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pet Clinic Management System</title>
+</head>
+
+<body>
+
+<center>
+    <h1>Pet Clinic Management System</h1>
+    <p>Welcome to our Pet Clinic!</p>
+</center>
+
+<hr>
+
+<h2>Pet Records</h2>
+
+Pet Name:
+<input type="text" id="petName">
+<br><br>
+
+Owner Name:
+<input type="text" id="ownerName">
+<br><br>
+
+Pet Type:
+<select id="petType">
+    <option>Dog</option>
+    <option>Cat</option>
+</select>
+<br><br>
+
+Breed:
+<input type="text" id="breed">
+<br><br>
+
+Age:
+<input type="number" id="age">
+<br><br>
+
+<button onclick="addPet()">Add Pet</button>
+
+<hr>
+
+<h2>Pet List</h2>
+
+Search Pet or Owner:
+<input type="text" id="search">
+
+<button onclick="searchPet()">Search</button>
+<button onclick="showPets()">Show All</button>
+
+<p id="searchResult"></p>
+<p id="petList"></p>
+
+<hr>
+
+<h2>Owner Records</h2>
+
+Owner Name:
+<input type="text" id="newOwner">
+<br><br>
+
+Contact Number:
+<input type="text" id="contact">
+<br><br>
+
+Address:
+<input type="text" id="address">
+<br><br>
+
+<button onclick="addOwner()">Add Owner</button>
+
+<hr>
+
+<h2>Owner List</h2>
+<p id="ownerList"></p>
+
+<hr>
+
+<h2>Consultations</h2>
+
+Pet Name:
+<input type="text" id="consultPet">
+<br><br>
+
+Veterinarian:
+<input type="text" id="veterinarian">
+<br><br>
+
+Date:
+<input type="date" id="consultDate">
+<br><br>
+
+Diagnosis:
+<input type="text" id="diagnosis">
+<br><br>
+
+<button onclick="addConsultation()">Add Consultation</button>
+
+<hr>
+
+<h2>Consultation Records</h2>
+<p id="consultationList"></p>
+
+<hr>
+
+<h2>Clinic Services</h2>
+
+Service:
+<select id="serviceName">
+    <option>Check-up</option>
+    <option>Vaccination</option>
+    <option>Grooming</option>
+    <option>Dental Cleaning</option>
+</select>
+<br><br>
+
+Price:
+<input type="number" id="servicePrice">
+<br><br>
+
+<button onclick="addService()">Add Service</button>
+
+<hr>
+
+<h2>Service List</h2>
+<p id="serviceList"></p>
+
+<hr>
+
+<h2>Medicines</h2>
+
+Medicine Name:
+<input type="text" id="medicineName">
+<br><br>
+
+Quantity:
+<input type="number" id="quantity">
+<br><br>
+
+Price:
+<input type="number" id="medicinePrice">
+<br><br>
+
+<button onclick="addMedicine()">Add Medicine</button>
+
+<hr>
+
+<h2>Medicine List</h2>
+<p id="medicineList"></p>
+
+<hr>
+
+<h2>Clinic Charges</h2>
+
+Pet Name:
+<input type="text" id="chargePet">
+<br><br>
+
+Description:
+<input type="text" id="chargeDescription">
+<br><br>
+
+Amount:
+<input type="number" id="chargeAmount">
+<br><br>
+
+<button onclick="addCharge()">Add Charge</button>
+
+<hr>
+
+<h2>Charge Records</h2>
+<p id="chargeList"></p>
+
+<hr>
+
+<center>
+    <p>Pet Clinic Management System</p>
+</center>
+
+
+<script>
+
+// ARRAYS
+
+var allPets = [];
+var allOwners = [];
+var allConsultations = [];
+var allServices = [];
+var allMedicines = [];
+var allCharges = [];
+
+
+// SAVE DATA USING JSON
+
+function saveData() {
+
+    var data = {
+        pets: allPets,
+        owners: allOwners,
+        consultations: allConsultations,
+        services: allServices,
+        medicines: allMedicines,
+        charges: allCharges
+    };
+
+    localStorage.setItem("petClinicData", JSON.stringify(data));
+
+}
+
+
+// LOAD SAVED DATA
+
+function loadData() {
+
+    var savedData = localStorage.getItem("petClinicData");
+
+    if (savedData) {
+
+        var data = JSON.parse(savedData);
+
+        allPets = data.pets || [];
+        allOwners = data.owners || [];
+        allConsultations = data.consultations || [];
+        allServices = data.services || [];
+        allMedicines = data.medicines || [];
+        allCharges = data.charges || [];
+
+    }
+    else {
+
+        allPets = [];
+        allOwners = [];
+        allConsultations = [];
+        allServices = [];
+        allMedicines = [];
+        allCharges = [];
+
+    }
+
+    showPets();
+    showOwners();
+    showConsultations();
+    showServices();
+    showMedicines();
+    showCharges();
+
+}
+
+
+// PET RECORDS
+
+function addPet() {
+
+    var petName = document.getElementById("petName").value;
+    var ownerName = document.getElementById("ownerName").value;
+    var petType = document.getElementById("petType").value;
+    var breed = document.getElementById("breed").value;
+    var age = document.getElementById("age").value;
+
+    if (petName == "" || ownerName == "") {
+
+        alert("Please enter the pet name and owner name.");
+
+    }
+    else {
+
+        var pet = {
+            petName: petName,
+            ownerName: ownerName,
+            petType: petType,
+            breed: breed,
+            age: age
+        };
+
+        allPets.push(pet);
+
+        saveData();
+        showPets();
+
+        document.getElementById("petName").value = "";
+        document.getElementById("ownerName").value = "";
+        document.getElementById("breed").value = "";
+        document.getElementById("age").value = "";
+
+        alert("Pet added successfully!");
+
+    }
+
+}
+
+
+// SHOW ALL PETS
+
+function showPets() {
+
+    var result = "";
+
+    for (var i = 0; i < allPets.length; i++) {
+
+        result += "Pet Name: " + allPets[i].petName + "<br>";
+        result += "Owner Name: " + allPets[i].ownerName + "<br>";
+        result += "Pet Type: " + allPets[i].petType + "<br>";
+        result += "Breed: " + allPets[i].breed + "<br>";
+        result += "Age: " + allPets[i].age + "<br>";
+        result += "-------------------------<br>";
+
+    }
+
+    document.getElementById("petList").innerHTML = result;
+    document.getElementById("searchResult").innerHTML =
+        "Showing all pet records.";
+
+}
+
+
+// SEARCH PET OR OWNER
+
+function searchPet() {
+
+    var search = document.getElementById("search").value;
+    var result = "";
+    var found = false;
+
+    if (search == "") {
+
+        document.getElementById("searchResult").innerHTML =
+            "Please enter a pet name or owner name.";
+
+    }
+    else {
+
+        for (var i = 0; i < allPets.length; i++) {
+
+            if (
+                allPets[i].petName.toLowerCase().indexOf(search.toLowerCase()) != -1 ||
+                allPets[i].ownerName.toLowerCase().indexOf(search.toLowerCase()) != -1
+            ) {
+
+                result += "Pet Name: " + allPets[i].petName + "<br>";
+                result += "Owner Name: " + allPets[i].ownerName + "<br>";
+                result += "Pet Type: " + allPets[i].petType + "<br>";
+                result += "Breed: " + allPets[i].breed + "<br>";
+                result += "Age: " + allPets[i].age + "<br>";
+                result += "-------------------------<br>";
+
+                found = true;
+
+            }
+
+        }
+
+        if (found == true) {
+
+            document.getElementById("petList").innerHTML = result;
+            document.getElementById("searchResult").innerHTML =
+                "Search results:";
+
+        }
+        else {
+
+            document.getElementById("petList").innerHTML = "";
+            document.getElementById("searchResult").innerHTML =
+                "No matching pet or owner found.";
+
+        }
+
+    }
+
+}
+
+
+// OWNER RECORDS
+
+function addOwner() {
+
+    var name = document.getElementById("newOwner").value;
+    var contact = document.getElementById("contact").value;
+    var address = document.getElementById("address").value;
+
+    if (name == "") {
+
+        alert("Please enter the owner's name.");
+
+    }
+    else {
+
+        var owner = {
+            name: name,
+            contact: contact,
+            address: address
+        };
+
+        allOwners.push(owner);
+
+        saveData();
+        showOwners();
+
+        document.getElementById("newOwner").value = "";
+        document.getElementById("contact").value = "";
+        document.getElementById("address").value = "";
+
+        alert("Owner added successfully!");
+
+    }
+
+}
+
+
+// SHOW OWNERS
+
+function showOwners() {
+
+    var result = "";
+
+    for (var i = 0; i < allOwners.length; i++) {
+
+        result += "Owner Name: " + allOwners[i].name + "<br>";
+        result += "Contact Number: " + allOwners[i].contact + "<br>";
+        result += "Address: " + allOwners[i].address + "<br>";
+        result += "-------------------------<br>";
+
+    }
+
+    document.getElementById("ownerList").innerHTML = result;
+
+}
+
+
+// CONSULTATIONS
+
+function addConsultation() {
+
+    var pet = document.getElementById("consultPet").value;
+    var veterinarian = document.getElementById("veterinarian").value;
+    var date = document.getElementById("consultDate").value;
+    var diagnosis = document.getElementById("diagnosis").value;
+
+    if (pet == "") {
+
+        alert("Please enter the pet name.");
+
+    }
+    else {
+
+        var consultation = {
+            pet: pet,
+            veterinarian: veterinarian,
+            date: date,
+            diagnosis: diagnosis
+        };
+
+        allConsultations.push(consultation);
+
+        saveData();
+        showConsultations();
+
+        document.getElementById("consultPet").value = "";
+        document.getElementById("veterinarian").value = "";
+        document.getElementById("consultDate").value = "";
+        document.getElementById("diagnosis").value = "";
+
+        alert("Consultation added successfully!");
+
+    }
+
+}
+
+
+// SHOW CONSULTATIONS
+
+function showConsultations() {
+
+    var result = "";
+
+    for (var i = 0; i < allConsultations.length; i++) {
+
+        result += "Pet Name: " + allConsultations[i].pet + "<br>";
+        result += "Veterinarian: " + allConsultations[i].veterinarian + "<br>";
+        result += "Date: " + allConsultations[i].date + "<br>";
+        result += "Diagnosis: " + allConsultations[i].diagnosis + "<br>";
+        result += "-------------------------<br>";
+
+    }
+
+    document.getElementById("consultationList").innerHTML = result;
+
+}
+
+
+// CLINIC SERVICES
+
+function addService() {
+
+    var name = document.getElementById("serviceName").value;
+    var price = document.getElementById("servicePrice").value;
+
+    if (price == "") {
+
+        alert("Please enter the service price.");
+
+    }
+    else {
+
+        var service = {
+            name: name,
+            price: price
+        };
+
+        allServices.push(service);
+
+        saveData();
+        showServices();
+
+        document.getElementById("servicePrice").value = "";
+
+        alert("Service added successfully!");
+
+    }
+
+}
+
+
+// SHOW SERVICES
+
+function showServices() {
+
+    var result = "";
+
+    for (var i = 0; i < allServices.length; i++) {
+
+        result += "Service Name: " + allServices[i].name + "<br>";
+        result += "Price: PHP " + allServices[i].price + "<br>";
+        result += "-------------------------<br>";
+
+    }
+
+    document.getElementById("serviceList").innerHTML = result;
+
+}
+
+
+// MEDICINES
+
+function addMedicine() {
+
+    var name = document.getElementById("medicineName").value;
+    var quantity = document.getElementById("quantity").value;
+    var price = document.getElementById("medicinePrice").value;
+
+    if (name == "") {
+
+        alert("Please enter the medicine name.");
+
+    }
+    else {
+
+        var medicine = {
+            name: name,
+            quantity: quantity,
+            price: price
+        };
+
+        allMedicines.push(medicine);
+
+        saveData();
+        showMedicines();
+
+        document.getElementById("medicineName").value = "";
+        document.getElementById("quantity").value = "";
+        document.getElementById("medicinePrice").value = "";
+
+        alert("Medicine added successfully!");
+
+    }
+
+}
+
+
+// SHOW MEDICINES
+
+function showMedicines() {
+
+    var result = "";
+
+    for (var i = 0; i < allMedicines.length; i++) {
+
+        result += "Medicine Name: " + allMedicines[i].name + "<br>";
+        result += "Quantity: " + allMedicines[i].quantity + "<br>";
+        result += "Price: PHP " + allMedicines[i].price + "<br>";
+        result += "-------------------------<br>";
+
+    }
+
+    document.getElementById("medicineList").innerHTML = result;
+
+}
+
+
+// CLINIC CHARGES
+
+function addCharge() {
+
+    var pet = document.getElementById("chargePet").value;
+    var description = document.getElementById("chargeDescription").value;
+    var amount = document.getElementById("chargeAmount").value;
+
+    if (pet == "" || amount == "") {
+
+        alert("Please enter the pet name and amount.");
+
+    }
+    else {
+
+        var charge = {
+            pet: pet,
+            description: description,
+            amount: amount
+        };
+
+        allCharges.push(charge);
+
+        saveData();
+        showCharges();
+
+        document.getElementById("chargePet").value = "";
+        document.getElementById("chargeDescription").value = "";
+        document.getElementById("chargeAmount").value = "";
+
+        alert("Charge added successfully!");
+
+    }
+
+}
+
+
+// SHOW CHARGES
+
+function showCharges() {
+
+    var result = "";
+
+    for (var i = 0; i < allCharges.length; i++) {
+
+        result += "Pet Name: " + allCharges[i].pet + "<br>";
+        result += "Description: " + allCharges[i].description + "<br>";
+        result += "Total Charge: PHP " + allCharges[i].amount + "<br>";
+        result += "-------------------------<br>";
+
+    }
+
+    document.getElementById("chargeList").innerHTML = result;
+
+}
+
+
+// LOAD DATA WHEN THE PAGE OPENS
+
+loadData();
+
+</script>
+
+</body>
+</html>

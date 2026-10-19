@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pet Clinic Management System</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background-color: lightgray;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: green;
+        }
+
+        h2 {
+            color: darkgreen;
+        }
+
+        .box {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid gray;
+        }
+
+        input, select {
+            padding: 8px;
+            margin: 5px;
+        }
+
+        button {
+            padding: 8px 15px;
+            background-color: green;
+            color: white;
+            border: none;
+        }
+
+        button:hover {
+            background-color: darkgreen;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: green;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Pet Clinic Management System</h1>
+
+    <div class="box">
+
+        <h2>Pet Records</h2>
+
+        <label>Pet Name:</label>
+        <input type="text" id="petName">
+
+        <br>
+
+        <label>Owner Name:</label>
+        <input type="text" id="ownerName">
+
+        <br>
+
+        <label>Pet Type:</label>
+
+        <select id="petType">
+            <option>Dog</option>
+            <option>Cat</option>
+            <option>Bird</option>
+            <option>Rabbit</option>
+        </select>
+
+        <br>
+
+        <label>Breed:</label>
+        <input type="text" id="breed">
+
+        <br>
+
+        <label>Age:</label>
+        <input type="number" id="age">
+
+        <br><br>
+
+        <button onclick="addPet()">Add Pet</button>
+
+    </div>
+
+
+    <div class="box">
+
+        <h2>Search Pet or Owner</h2>
+
+        <input type="text" id="search"
+               placeholder="Enter pet or owner name">
+
+        <button onclick="searchPet()">Search</button>
+
+        <p id="result"></p>
+
+    </div>
+
+
+    <div class="box">
+
+        <h2>Pet List</h2>
+
+        <table>
+
+            <tr>
+                <th>Pet Name</th>
+                <th>Owner</th>
+                <th>Type</th>
+                <th>Breed</th>
+                <th>Age</th>
+            </tr>
+
+            <tbody id="petList">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <div class="box">
+
+        <h2>Consultation</h2>
+
+        <label>Pet Name:</label>
+        <input type="text" id="consultPet">
+
+        <br>
+
+        <label>Diagnosis:</label>
+        <input type="text" id="diagnosis">
+
+        <br>
+
+        <label>Date:</label>
+        <input type="date" id="date">
+
+        <br><br>
+
+        <button onclick="addConsultation()">
+            Add Consultation
+        </button>
+
+        <p id="consultationResult"></p>
+
+    </div>
+
+
+    <div class="box">
+
+        <h2>Services</h2>
+
+        <label>Service:</label>
+
+        <select id="service">
+            <option>Check-up</option>
+            <option>Vaccination</option>
+            <option>Grooming</option>
+            <option>Dental Cleaning</option>
+        </select>
+
+        <br>
+
+        <label>Price:</label>
+        <input type="number" id="price">
+
+        <br><br>
+
+        <button onclick="addService()">Add Service</button>
+
+        <p id="serviceResult"></p>
+
+    </div>
+
+
+    <div class="box">
+
+        <h2>Medicines</h2>
+
+        <label>Medicine Name:</label>
+        <input type="text" id="medicine">
+
+        <br>
+
+        <label>Quantity:</label>
+        <input type="number" id="quantity">
+
+        <br><br>
+
+        <button onclick="addMedicine()">Add Medicine</button>
+
+        <p id="medicineResult"></p>
+
+    </div>
+
+
+    <div class="box">
+
+        <h2>Clinic Charges</h2>
+
+        <label>Pet Name:</label>
+        <input type="text" id="chargePet">
+
+        <br>
+
+        <label>Charge:</label>
+        <input type="number" id="charge">
+
+        <br><br>
+
+        <button onclick="calculateCharge()">
+            Calculate
+        </button>
+
+        <p id="total"></p>
+
+    </div>
+
+
+    <script>
+
+        function addPet() {
+
+            var petName = document.getElementById("petName").value;
+            var ownerName = document.getElementById("ownerName").value;
+            var petType = document.getElementById("petType").value;
+            var breed = document.getElementById("breed").value;
+            var age = document.getElementById("age").value;
+
+            var table = document.getElementById("petList");
+
+            var row = table.insertRow();
+
+            row.insertCell(0).innerHTML = petName;
+            row.insertCell(1).innerHTML = ownerName;
+            row.insertCell(2).innerHTML = petType;
+            row.insertCell(3).innerHTML = breed;
+            row.insertCell(4).innerHTML = age;
+
+            alert("Pet added successfully!");
+
+        }
+
+
+        function searchPet() {
+
+            var search = document.getElementById("search").value;
+
+            document.getElementById("result").innerHTML =
+                "Searching for: " + search;
+
+        }
+
+
+        function addConsultation() {
+
+            var pet = document.getElementById("consultPet").value;
+            var diagnosis = document.getElementById("diagnosis").value;
+            var date = document.getElementById("date").value;
+
+            document.getElementById("consultationResult").innerHTML =
+                "Consultation added for " + pet +
+                "<br>Diagnosis: " + diagnosis +
+                "<br>Date: " + date;
+
+        }
+
+
+        function addService() {
+
+            var service = document.getElementById("service").value;
+            var price = document.getElementById("price").value;
+
+            document.getElementById("serviceResult").innerHTML =
+                "Service: " + service +
+                "<br>Price: ₱" + price;
+
+        }
+
+
+        function addMedicine() {
+
+            var medicine = document.getElementById("medicine").value;
+            var quantity = document.getElementById("quantity").value;
+
+            document.getElementById("medicineResult").innerHTML =
+                "Medicine: " + medicine +
+                "<br>Quantity: " + quantity;
+
+        }
+
+
+        function calculateCharge() {
+
+            var pet = document.getElementById("chargePet").value;
+            var charge = document.getElementById("charge").value;
+
+            document.getElementById("total").innerHTML =
+                "Pet: " + pet +
+                "<br>Total Charge: ₱" + charge;
+
+        }
+
+    </script>
+
+</body>
+</html>

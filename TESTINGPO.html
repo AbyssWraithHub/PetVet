@@ -1,0 +1,1060 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pet Clinic Management System</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f8f4f1;
+            color: #333333;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            width: 230px;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #590d22;
+            color: white;
+            padding: 25px 15px;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .sidebar p {
+            text-align: center;
+            font-size: 13px;
+            color: #ead6dc;
+            margin-bottom: 30px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 13px;
+            margin-bottom: 7px;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: #8b1e3f;
+            padding-left: 20px;
+        }
+
+        /* MAIN CONTENT */
+
+        .main {
+            margin-left: 230px;
+            padding: 25px;
+        }
+
+        .header {
+            background-color: white;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 6px solid #800f2f;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 10px #00000008;
+        }
+
+        .header h1 {
+            color: #590d22;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #777777;
+            margin-bottom: 0;
+        }
+
+        /* DASHBOARD CARDS */
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 12px;
+            border-bottom: 4px solid #800f2f;
+            box-shadow: 0 3px 10px #00000008;
+            transition: 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 15px #00000012;
+        }
+
+        .stat-card p {
+            color: #777777;
+            font-size: 13px;
+            margin: 0 0 10px;
+        }
+
+        .stat-card h2 {
+            color: #590d22;
+            margin: 0;
+            font-size: 28px;
+        }
+
+        /* SECTIONS */
+
+        .section {
+            background-color: white;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px #00000008;
+            scroll-margin-top: 20px;
+        }
+
+        .section h2 {
+            color: #590d22;
+            margin-top: 0;
+            border-bottom: 1px solid #eeeeee;
+            padding-bottom: 15px;
+        }
+
+        .section h3 {
+            color: #800f2f;
+            margin-top: 30px;
+        }
+
+        /* INPUT FIELDS */
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 7px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dddddd;
+            border-radius: 7px;
+            background-color: #fffdfc;
+            font-size: 14px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus, select:focus {
+            border-color: #800f2f;
+            box-shadow: 0 0 0 3px #800f2f15;
+        }
+
+        /* BUTTONS */
+
+        button {
+            background-color: #800f2f;
+            color: white;
+            border: none;
+            padding: 11px 18px;
+            border-radius: 7px;
+            cursor: pointer;
+            margin-top: 15px;
+            margin-right: 5px;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #590d22;
+            transform: translateY(-2px);
+        }
+
+        .secondary {
+            background-color: #e9dce0;
+            color: #590d22;
+        }
+
+        .secondary:hover {
+            background-color: #dbc3cb;
+        }
+
+        /* RECORD DISPLAY */
+
+        .record-list {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .record {
+            background-color: #fffaf8;
+            border: 1px solid #eadde0;
+            border-left: 4px solid #800f2f;
+            border-radius: 8px;
+            padding: 15px;
+            line-height: 1.8;
+            overflow-wrap: anywhere;
+            transition: 0.3s;
+        }
+
+        .record:hover {
+            box-shadow: 0 4px 12px #00000010;
+        }
+
+        .record strong {
+            color: #590d22;
+        }
+
+        .empty {
+            color: #888888;
+            background-color: #faf7f5;
+            padding: 18px;
+            border-radius: 8px;
+            text-align: center;
+            grid-column: 1 / -1;
+        }
+
+        .status {
+            color: #590d22;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+
+        .footer {
+            text-align: center;
+            color: #888888;
+            padding: 20px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* RESPONSIVE DESIGN */
+
+        @media (max-width: 1000px) {
+            .dashboard {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 700px) {
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+
+            .sidebar a {
+                display: inline-block;
+                padding: 10px;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 15px;
+            }
+
+            .record-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+    <h2>🐾 Pet Clinic</h2>
+    <p>Management System</p>
+
+    <a href="#dashboard">🏠 Dashboard</a>
+    <a href="#pets">🐶 Pet Records</a>
+    <a href="#owners">👤 Owner Records</a>
+    <a href="#consultations">🩺 Consultations</a>
+    <a href="#services">💊 Clinic Services</a>
+    <a href="#medicines">💉 Medicines</a>
+    <a href="#charges">💰 Clinic Charges</a>
+
+</div>
+
+<!-- MAIN CONTENT -->
+
+<div class="main">
+
+    <div class="header" id="dashboard">
+        <h1>Pet Clinic Management System</h1>
+        <p>Welcome! Manage your pets, owners, consultations, and clinic records here.</p>
+    </div>
+
+    <!-- DASHBOARD -->
+
+    <div class="dashboard">
+
+        <div class="stat-card">
+            <p>Total Pets</p>
+            <h2 id="totalPets">0</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>Total Owners</p>
+            <h2 id="totalOwners">0</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>Consultations</p>
+            <h2 id="totalConsultations">0</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>Clinic Services</p>
+            <h2 id="totalServices">0</h2>
+        </div>
+
+    </div>
+
+    <!-- PET RECORDS -->
+
+    <div class="section" id="pets">
+
+        <h2>🐶 Pet Records</h2>
+
+        <label>Pet Name</label>
+        <input type="text" id="petName" placeholder="Enter pet name">
+
+        <label>Owner Name</label>
+        <input type="text" id="ownerName" placeholder="Enter owner name">
+
+        <label>Pet Type</label>
+        <select id="petType">
+            <option>Dog</option>
+            <option>Cat</option>
+        </select>
+
+        <label>Breed</label>
+        <input type="text" id="breed" placeholder="Enter breed">
+
+        <label>Age</label>
+        <input type="number" id="age" min="0" placeholder="Enter age">
+
+        <button onclick="addPet()">Add Pet</button>
+
+        <h3>Pet List</h3>
+
+        <label>Search Pet or Owner</label>
+        <input type="text" id="search" placeholder="Search by pet or owner name">
+
+        <button onclick="searchPet()">Search</button>
+        <button class="secondary" onclick="showPets()">Show All</button>
+
+        <p class="status" id="searchResult">Showing all pet records.</p>
+        <div class="record-list" id="petList"></div>
+
+    </div>
+
+    <!-- OWNER RECORDS -->
+
+    <div class="section" id="owners">
+
+        <h2>👤 Owner Records</h2>
+
+        <label>Owner Name</label>
+        <input type="text" id="newOwner" placeholder="Enter owner's name">
+
+        <label>Contact Number</label>
+        <input type="text" id="contact" placeholder="Enter contact number">
+
+        <label>Address</label>
+        <input type="text" id="address" placeholder="Enter address">
+
+        <button onclick="addOwner()">Add Owner</button>
+
+        <h3>Owner List</h3>
+        <div class="record-list" id="ownerList"></div>
+
+    </div>
+
+    <!-- CONSULTATIONS -->
+
+    <div class="section" id="consultations">
+
+        <h2>🩺 Consultations</h2>
+
+        <label>Pet Name</label>
+        <input type="text" id="consultPet" placeholder="Enter pet name">
+
+        <label>Veterinarian</label>
+        <input type="text" id="veterinarian" placeholder="Enter veterinarian name">
+
+        <label>Date</label>
+        <input type="date" id="consultDate">
+
+        <label>Diagnosis</label>
+        <input type="text" id="diagnosis" placeholder="Enter diagnosis">
+
+        <button onclick="addConsultation()">Add Consultation</button>
+
+        <h3>Consultation Records</h3>
+        <div class="record-list" id="consultationList"></div>
+
+    </div>
+
+    <!-- CLINIC SERVICES -->
+
+    <div class="section" id="services">
+
+        <h2>💊 Clinic Services</h2>
+
+        <label>Service</label>
+        <select id="serviceName">
+            <option>Check-up</option>
+            <option>Vaccination</option>
+            <option>Grooming</option>
+            <option>Dental Cleaning</option>
+        </select>
+
+        <label>Price (PHP)</label>
+        <input type="number" id="servicePrice" min="0" placeholder="Enter service price">
+
+        <button onclick="addService()">Add Service</button>
+
+        <h3>Service List</h3>
+        <div class="record-list" id="serviceList"></div>
+
+    </div>
+
+    <!-- MEDICINES -->
+
+    <div class="section" id="medicines">
+
+        <h2>💉 Medicines</h2>
+
+        <label>Medicine Name</label>
+        <input type="text" id="medicineName" placeholder="Enter medicine name">
+
+        <label>Quantity</label>
+        <input type="number" id="quantity" min="0" placeholder="Enter quantity">
+
+        <label>Price (PHP)</label>
+        <input type="number" id="medicinePrice" min="0" placeholder="Enter price">
+
+        <button onclick="addMedicine()">Add Medicine</button>
+
+        <h3>Medicine List</h3>
+        <div class="record-list" id="medicineList"></div>
+
+    </div>
+
+    <!-- CLINIC CHARGES -->
+
+    <div class="section" id="charges">
+
+        <h2>💰 Clinic Charges</h2>
+
+        <label>Pet Name</label>
+        <input type="text" id="chargePet" placeholder="Enter pet name">
+
+        <label>Description</label>
+        <input type="text" id="chargeDescription" placeholder="Enter charge description">
+
+        <label>Amount (PHP)</label>
+        <input type="number" id="chargeAmount" min="0" placeholder="Enter amount">
+
+        <button onclick="addCharge()">Add Charge</button>
+
+        <h3>Charge Records</h3>
+        <div class="record-list" id="chargeList"></div>
+
+    </div>
+
+    <div class="footer">
+        <p>🐾 Pet Clinic Management System</p>
+        <p>Helping you take better care of every pet.</p>
+    </div>
+
+</div>
+
+<script>
+
+// ARRAYS
+
+var allPets = [];
+var allOwners = [];
+var allConsultations = [];
+var allServices = [];
+var allMedicines = [];
+var allCharges = [];
+
+
+// DISPLAY TEXT SAFELY
+
+function safeText(text) {
+
+    return String(text == null ? "" : text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+
+}
+
+
+// UPDATE DASHBOARD
+
+function updateDashboard() {
+
+    document.getElementById("totalPets").innerHTML = allPets.length;
+    document.getElementById("totalOwners").innerHTML = allOwners.length;
+    document.getElementById("totalConsultations").innerHTML = allConsultations.length;
+    document.getElementById("totalServices").innerHTML = allServices.length;
+
+}
+
+
+// SAVE DATA USING JSON
+
+function saveData() {
+
+    var data = {
+        pets: allPets,
+        owners: allOwners,
+        consultations: allConsultations,
+        services: allServices,
+        medicines: allMedicines,
+        charges: allCharges
+    };
+
+    localStorage.setItem("petClinicData", JSON.stringify(data));
+
+    updateDashboard();
+
+}
+
+
+// LOAD SAVED DATA
+
+function loadData() {
+
+    var savedData = localStorage.getItem("petClinicData");
+
+    if (savedData) {
+
+        try {
+
+            var data = JSON.parse(savedData);
+
+            allPets = Array.isArray(data.pets) ? data.pets : [];
+            allOwners = Array.isArray(data.owners) ? data.owners : [];
+            allConsultations = Array.isArray(data.consultations) ? data.consultations : [];
+            allServices = Array.isArray(data.services) ? data.services : [];
+            allMedicines = Array.isArray(data.medicines) ? data.medicines : [];
+            allCharges = Array.isArray(data.charges) ? data.charges : [];
+
+        }
+        catch (error) {
+
+            alert("The saved data could not be loaded.");
+
+        }
+
+    }
+
+    showPets();
+    showOwners();
+    showConsultations();
+    showServices();
+    showMedicines();
+    showCharges();
+
+    updateDashboard();
+
+}
+
+
+// PET RECORDS
+
+function addPet() {
+
+    var petName = document.getElementById("petName").value.trim();
+    var ownerName = document.getElementById("ownerName").value.trim();
+    var petType = document.getElementById("petType").value;
+    var breed = document.getElementById("breed").value.trim();
+    var age = document.getElementById("age").value;
+
+    if (petName == "" || ownerName == "") {
+
+        alert("Please enter the pet name and owner name.");
+
+    }
+    else if (age != "" && Number(age) < 0) {
+
+        alert("Age cannot be negative.");
+
+    }
+    else {
+
+        var pet = {
+            petName: petName,
+            ownerName: ownerName,
+            petType: petType,
+            breed: breed,
+            age: age
+        };
+
+        allPets.push(pet);
+
+        saveData();
+        showPets();
+
+        document.getElementById("petName").value = "";
+        document.getElementById("ownerName").value = "";
+        document.getElementById("breed").value = "";
+        document.getElementById("age").value = "";
+
+        alert("Pet added successfully!");
+
+    }
+
+}
+
+
+// SHOW ALL PETS
+
+function showPets() {
+
+    var result = "";
+
+    for (var i = 0; i < allPets.length; i++) {
+
+        result += '<div class="record">';
+        result += "<strong>Pet Name:</strong> " + safeText(allPets[i].petName) + "<br>";
+        result += "<strong>Owner:</strong> " + safeText(allPets[i].ownerName) + "<br>";
+        result += "<strong>Pet Type:</strong> " + safeText(allPets[i].petType) + "<br>";
+        result += "<strong>Breed:</strong> " + safeText(allPets[i].breed) + "<br>";
+        result += "<strong>Age:</strong> " + safeText(allPets[i].age) + "<br>";
+        result += "</div>";
+
+    }
+
+    if (result == "") {
+        result = '<div class="empty">No pet records available yet.</div>';
+    }
+
+    document.getElementById("petList").innerHTML = result;
+
+    document.getElementById("searchResult").innerHTML =
+        "Showing all pet records.";
+
+}
+
+
+// SEARCH PET OR OWNER
+
+function searchPet() {
+
+    var search = document.getElementById("search").value.trim();
+    var result = "";
+    var found = false;
+
+    if (search == "") {
+
+        document.getElementById("searchResult").innerHTML =
+            "Please enter a pet name or owner name.";
+
+        return;
+
+    }
+
+    for (var i = 0; i < allPets.length; i++) {
+
+        if (
+            allPets[i].petName.toLowerCase().indexOf(search.toLowerCase()) != -1 ||
+            allPets[i].ownerName.toLowerCase().indexOf(search.toLowerCase()) != -1
+        ) {
+
+            result += '<div class="record">';
+            result += "<strong>Pet Name:</strong> " + safeText(allPets[i].petName) + "<br>";
+            result += "<strong>Owner:</strong> " + safeText(allPets[i].ownerName) + "<br>";
+            result += "<strong>Pet Type:</strong> " + safeText(allPets[i].petType) + "<br>";
+            result += "<strong>Breed:</strong> " + safeText(allPets[i].breed) + "<br>";
+            result += "<strong>Age:</strong> " + safeText(allPets[i].age) + "<br>";
+            result += "</div>";
+
+            found = true;
+
+        }
+
+    }
+
+    if (found == true) {
+
+        document.getElementById("petList").innerHTML = result;
+
+        document.getElementById("searchResult").innerHTML =
+            "Search results found.";
+
+    }
+    else {
+
+        document.getElementById("petList").innerHTML =
+            '<div class="empty">No matching pet or owner found.</div>';
+
+        document.getElementById("searchResult").innerHTML =
+            "No matching records.";
+
+    }
+
+}
+
+
+// OWNER RECORDS
+
+function addOwner() {
+
+    var name = document.getElementById("newOwner").value.trim();
+    var contact = document.getElementById("contact").value.trim();
+    var address = document.getElementById("address").value.trim();
+
+    if (name == "") {
+
+        alert("Please enter the owner's name.");
+
+    }
+    else {
+
+        var owner = {
+            name: name,
+            contact: contact,
+            address: address
+        };
+
+        allOwners.push(owner);
+
+        saveData();
+        showOwners();
+
+        document.getElementById("newOwner").value = "";
+        document.getElementById("contact").value = "";
+        document.getElementById("address").value = "";
+
+        alert("Owner added successfully!");
+
+    }
+
+}
+
+
+// SHOW OWNERS
+
+function showOwners() {
+
+    var result = "";
+
+    for (var i = 0; i < allOwners.length; i++) {
+
+        result += '<div class="record">';
+        result += "<strong>Owner Name:</strong> " + safeText(allOwners[i].name) + "<br>";
+        result += "<strong>Contact:</strong> " + safeText(allOwners[i].contact) + "<br>";
+        result += "<strong>Address:</strong> " + safeText(allOwners[i].address);
+        result += "</div>";
+
+    }
+
+    if (result == "") {
+        result = '<div class="empty">No owner records available yet.</div>';
+    }
+
+    document.getElementById("ownerList").innerHTML = result;
+
+}
+
+
+// CONSULTATIONS
+
+function addConsultation() {
+
+    var pet = document.getElementById("consultPet").value.trim();
+    var veterinarian = document.getElementById("veterinarian").value.trim();
+    var date = document.getElementById("consultDate").value;
+    var diagnosis = document.getElementById("diagnosis").value.trim();
+
+    if (pet == "") {
+
+        alert("Please enter the pet name.");
+
+    }
+    else {
+
+        var consultation = {
+            pet: pet,
+            veterinarian: veterinarian,
+            date: date,
+            diagnosis: diagnosis
+        };
+
+        allConsultations.push(consultation);
+
+        saveData();
+        showConsultations();
+
+        document.getElementById("consultPet").value = "";
+        document.getElementById("veterinarian").value = "";
+        document.getElementById("consultDate").value = "";
+        document.getElementById("diagnosis").value = "";
+
+        alert("Consultation added successfully!");
+
+    }
+
+}
+
+
+// SHOW CONSULTATIONS
+
+function showConsultations() {
+
+    var result = "";
+
+    for (var i = 0; i < allConsultations.length; i++) {
+
+        result += '<div class="record">';
+        result += "<strong>Pet Name:</strong> " + safeText(allConsultations[i].pet) + "<br>";
+        result += "<strong>Veterinarian:</strong> " + safeText(allConsultations[i].veterinarian) + "<br>";
+        result += "<strong>Date:</strong> " + safeText(allConsultations[i].date) + "<br>";
+        result += "<strong>Diagnosis:</strong> " + safeText(allConsultations[i].diagnosis);
+        result += "</div>";
+
+    }
+
+    if (result == "") {
+        result = '<div class="empty">No consultation records available yet.</div>';
+    }
+
+    document.getElementById("consultationList").innerHTML = result;
+
+}
+
+
+// CLINIC SERVICES
+
+function addService() {
+
+    var name = document.getElementById("serviceName").value;
+    var price = document.getElementById("servicePrice").value;
+
+    if (price == "" || Number(price) < 0) {
+
+        alert("Please enter a valid service price.");
+
+    }
+    else {
+
+        var service = {
+            name: name,
+            price: price
+        };
+
+        allServices.push(service);
+
+        saveData();
+        showServices();
+
+        document.getElementById("servicePrice").value = "";
+
+        alert("Service added successfully!");
+
+    }
+
+}
+
+
+// SHOW SERVICES
+
+function showServices() {
+
+    var result = "";
+
+    for (var i = 0; i < allServices.length; i++) {
+
+        result += '<div class="record">';
+        result += "<strong>Service:</strong> " + safeText(allServices[i].name) + "<br>";
+        result += "<strong>Price:</strong> PHP " +
+            safeText(Number(allServices[i].price).toFixed(2));
+        result += "</div>";
+
+    }
+
+    if (result == "") {
+        result = '<div class="empty">No service records available yet.</div>';
+    }
+
+    document.getElementById("serviceList").innerHTML = result;
+
+}
+
+
+// MEDICINES
+
+function addMedicine() {
+
+    var name = document.getElementById("medicineName").value.trim();
+    var quantity = document.getElementById("quantity").value;
+    var price = document.getElementById("medicinePrice").value;
+
+    if (name == "") {
+
+        alert("Please enter the medicine name.");
+
+    }
+    else if (
+        quantity == "" || Number(quantity) < 0 ||
+        price == "" || Number(price) < 0
+    ) {
+
+        alert("Please enter a valid quantity and price.");
+
+    }
+    else {
+
+        var medicine = {
+            name: name,
+            quantity: quantity,
+            price: price
+        };
+
+        allMedicines.push(medicine);
+
+        saveData();
+        showMedicines();
+
+        document.getElementById("medicineName").value = "";
+        document.getElementById("quantity").value = "";
+        document.getElementById("medicinePrice").value = "";
+
+        alert("Medicine added successfully!");
+
+    }
+
+}
+
+
+// SHOW MEDICINES
+
+function showMedicines() {
+
+    var result = "";
+
+    for (var i = 0; i < allMedicines.length; i++) {
+
+        result += '<div class="record">';
+        result += "<strong>Medicine:</strong> " + safeText(allMedicines[i].name) + "<br>";
+        result += "<strong>Quantity:</strong> " + safeText(allMedicines[i].quantity) + "<br>";
+        result += "<strong>Price:</strong> PHP " +
+            safeText(Number(allMedicines[i].price).toFixed(2));
+        result += "</div>";
+
+    }
+
+    if (result == "") {
+        result = '<div class="empty">No medicine records available yet.</div>';
+    }
+
+    document.getElementById("medicineList").innerHTML = result;
+
+}
+
+
+// CLINIC CHARGES
+
+function addCharge() {
+
+    var pet = document.getElementById("chargePet").value.trim();
+    var description = document.getElementById("chargeDescription").value.trim();
+    var amount = document.getElementById("chargeAmount").value;
+
+    if (pet == "" || amount == "" || Number(amount) < 0) {
+
+        alert("Please enter the pet name and a valid amount.");
+
+    }
+    else {
+
+        var charge = {
+            pet: pet,
+            description: description,
+            amount: amount
+        };
+
+        allCharges.push(charge);
+
+        saveData();
+        showCharges();
+
+        document.getElementById("chargePet").value = "";
+        document.getElementById("chargeDescription").value = "";
+        document.getElementById("chargeAmount").value = "";
+
+        alert("Charge added successfully!");
+
+    }
+
+}
+
+
+// SHOW CHARGES
+
+function showCharges() {
+
+    var result = "";
+
+    for (var i = 0; i < allCharges.length; i++) {
+
+        result += '<div class="record">';
+        result += "<strong>Pet Name:</strong> " + safeText(allCharges[i].pet) + "<br>";
+        result += "<strong>Description:</strong> " + safeText(allCharges[i].description) + "<br>";
+        result += "<strong>Total Charge:</strong> PHP " +
+            safeText(Number(allCharges[i].amount).toFixed(2));
+        result += "</div>";
+
+    }
+
+    if (result == "") {
+        result = '<div class="empty">No charge records available yet.</div>';
+    }
+
+    document.getElementById("chargeList").innerHTML = result;
+
+}
+
+
+// LOAD DATA WHEN THE PAGE OPENS
+
+loadData();
+
+</script>
+
+</body>
+</html>

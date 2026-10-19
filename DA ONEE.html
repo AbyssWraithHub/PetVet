@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pet Clinic Management System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f7f3f0;
+            color: #33272a;
+        }
+
+        .sidebar {
+            width: 235px;
+            min-height: 100vh;
+            background: #5b1024;
+            color: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding: 25px 16px;
+        }
+
+        .brand {
+            padding: 5px 10px 25px;
+            border-bottom: 1px solid #874357;
+            margin-bottom: 20px;
+        }
+
+        .brand h2 {
+            margin: 0 0 8px;
+            font-size: 21px;
+        }
+
+        .brand p {
+            color: #ead5dc;
+            font-size: 12px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: #f8eaf0;
+            text-decoration: none;
+            padding: 12px;
+            margin: 5px 0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .sidebar a:hover {
+            background: #7c2940;
+        }
+
+        .main {
+            margin-left: 235px;
+            padding: 28px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .topbar h1 {
+            color: #5b1024;
+            font-size: 27px;
+        }
+
+        .today {
+            background: white;
+            border: 1px solid #eadfe2;
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: #5b1024;
+        }
+
+        .welcome {
+            background: linear-gradient(120deg, #5b1024, #85324a);
+            color: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 22px;
+        }
+
+        .welcome p {
+            color: #f4dfe6;
+            line-height: 1.6;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card, .section {
+            background: white;
+            border: 1px solid #eadfe2;
+            border-radius: 13px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card p {
+            color: #817276;
+            font-size: 13px;
+        }
+
+        .stat-card h3 {
+            color: #5b1024;
+            font-size: 27px;
+        }
+
+        .section {
+            scroll-margin-top: 20px;
+        }
+
+        .section-heading {
+            border-bottom: 1px solid #f0e6e8;
+            padding-bottom: 14px;
+            margin-bottom: 18px;
+        }
+
+        .section-heading h2 {
+            color: #5b1024;
+            font-size: 19px;
+            margin-bottom: 5px;
+        }
+
+        .section-heading p {
+            color: #8a7b7f;
+            font-size: 12px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #dfd1d6;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #fffdfd;
+        }
+
+        input:focus, select:focus {
+            outline: 2px solid #e8cbd4;
+            border-color: #8b304a;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+            margin-top: 17px;
+        }
+
+        button {
+            border: none;
+            border-radius: 8px;
+            padding: 11px 16px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .primary {
+            background: #6b1830;
+            color: white;
+        }
+
+        .primary:hover {
+            background: #842742;
+        }
+
+        .secondary {
+            background: #f2e6ea;
+            color: #5b1024;
+        }
+
+        .delete-button {
+            background: #fff0f0;
+            color: #a52d37;
+            padding: 8px 11px;
+            margin-top: 10px;
+        }
+
+        .search-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .search-row input {
+            flex: 1;
+        }
+
+        .record-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .record-card {
+            border: 1px solid #eee1e5;
+            background: #fffdfd;
+            border-radius: 10px;
+            padding: 15px;
+            line-height: 1.8;
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+
+        .record-card strong {
+            color: #5b1024;
+            font-size: 15px;
+        }
+
+        .record-card span {
+            color: #74666a;
+        }
+
+        .notice {
+            color: #75676b;
+            background: #faf5f6;
+            border: 1px dashed #e2cfd5;
+            padding: 15px;
+            border-radius: 9px;
+            font-size: 13px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 15px;
+            color: #8a7b7f;
+            font-size: 12px;
+        }
+
+        @media (max-width: 1000px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 720px) {
+            .sidebar {
+                position: static;
+                width: 100%;
+                min-height: auto;
+            }
+
+            .sidebar nav {
+                display: flex;
+                flex-wrap: wrap;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 16px;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .form-grid, .record-list {
+                grid-template-columns: 1fr;
+            }
+
+            .search-row {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="brand">
+            <h2>🐾 Little Shepherd</h2>
+            <p>PET CLINIC MANAGEMENT</p>
+        </div>
+
+        <nav>
+            <a href="#dashboard">Dashboard</a>
+            <a href="#pets">Pet Records</a>
+            <a href="#owners">Owner Records</a>
+            <a href="#consultations">Consultations</a>
+            <a href="#services">Clinic Services</a>
+            <a href="#medicines">Medicines</a>
+            <a href="#charges">Clinic Charges</a>
+        </nav>
+    </aside>
+
+    <main class="main">
+
+        <div class="topbar" id="dashboard">
+            <div>
+                <h1>Pet Clinic Dashboard</h1>
+                <p>Manage your clinic records in one place.</p>
+            </div>
+            <div class="today" id="todayDate"></div>
+        </div>
+
+        <div class="welcome">
+            <h2>Welcome to Little Shepherd Pet Clinic!</h2>
+            <p>Keep pet information, owner details, consultations,
+            services, medicines, and charges organized.</p>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <p>Total Pets</p>
+                <h3 id="petCount">0</h3>
+            </div>
+            <div class="stat-card">
+                <p>Pet Owners</p>
+                <h3 id="ownerCount">0</h3>
+            </div>
+            <div class="stat-card">
+                <p>Consultations</p>
+                <h3 id="consultationCount">0</h3>
+            </div>
+            <div class="stat-card">
+                <p>Clinic Services</p>
+                <h3 id="serviceCount">0</h3>
+            </div>
+        </div>
+
+        <!-- PET RECORDS -->
+        <section class="section" id="pets">
+            <div class="section-heading">
+                <h2>🐶 Pet Records</h2>
+                <p>Add and manage pet information.</p>
+            </div>
+
+            <div class="form-grid">
+                <div class="field">
+                    <label>Pet Name *</label>
+                    <input type="text" id="petName" placeholder="Enter pet name">
+                </div>
+
+                <div class="field">
+                    <label>Owner Name *</label>
+                    <input type="text" id="ownerName" placeholder="Enter owner name">
+                </div>
+
+                <div class="field">
+                    <label>Pet Type</label>
+                    <select id="petType">
+                        <option>Dog</option>
+                        <option>Cat</option>
+                        <option>Bird</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>Breed</label>
+                    <input type="text" id="breed" placeholder="Enter breed">
+                </div>
+
+                <div class="field">
+                    <label>Age</label>
+                    <input type="number" id="age" min="0" placeholder="Age in years">
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="primary" onclick="addPet()">+ Add Pet</button>
+                <button class="secondary" onclick="showPets()">Show All Pets</button>
+            </div>
+
+            <div class="section-heading" style="margin-top:25px">
+                <h2>Pet List</h2>
+                <p>Search by pet or owner's name.</p>
+            </div>
+
+            <div class="search-row">
+                <input type="text" id="search" placeholder="Search pet or owner...">
+                <button class="primary" onclick="searchPet()">Search</button>
+                <button class="secondary" onclick="showPets()">Show All</button>
+            </div>
+
+            <p id="searchResult"></p>
+            <div id="petList" class="record-list"></div>
+        </section>
+
+        <!-- OWNER RECORDS -->
+        <section class="section" id="owners">
+            <div class="section-heading">
+                <h2>👤 Owner Records</h2>
+                <p>Save pet owner contact information.</p>
+            </div>
+
+            <div class="form-grid">
+                <div class="field">
+                    <label>Owner Name *</label>
+                    <input type="text" id="newOwner" placeholder="Enter owner name">
+                </div>
+
+                <div class="field">
+                    <label>Contact Number</label>
+                    <input type="text" id="contact" placeholder="Enter contact number">
+                </div>
+
+                <div class="field">
+                    <label>Address</label>
+                    <input type="text" id="address" placeholder="Enter address">
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="primary" onclick="addOwner()">+ Add Owner</button>
+            </div>
+
+            <div class="section-heading" style="margin-top:25px">
+                <h2>Owner List</h2>
+            </div>
+            <div id="ownerList" class="record-list"></div>
+        </section>
+
+        <!-- CONSULTATIONS -->
+        <section class="section" id="consultations">
+            <div class="section-heading">
+                <h2>🩺 Consultations</h2>
+                <p>Record pet check-ups and diagnosis.</p>
+            </div>
+
+            <div class="form-grid">
+                <div class="field">
+                    <label>Pet Name *</label>
+                    <input type="text" id="consultPet" placeholder="Enter pet name">
+                </div>
+
+                <div class="field">
+                    <label>Veterinarian</label>
+                    <input type="text" id="veterinarian" placeholder="Veterinarian name">
+                </div>
+
+                <div class="field">
+                    <label>Date</label>
+                    <input type="date" id="consultDate">
+                </div>
+
+                <div class="field">
+                    <label>Diagnosis</label>
+                    <input type="text" id="diagnosis" placeholder="Enter diagnosis">
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="primary" onclick="addConsultation()">+ Add Consultation</button>
+            </div>
+
+            <div class="section-heading" style="margin-top:25px">
+                <h2>Consultation Records</h2>
+            </div>
+            <div id="consultationList" class="record-list"></div>
+        </section>
+
+        <!-- CLINIC SERVICES -->
+        <section class="section" id="services">
+            <div class="section-heading">
+                <h2>✚ Clinic Services</h2>
+                <p>Add services and their prices.</p>
+            </div>
+
+            <div class="form-grid">
+                <div class="field">
+                    <label>Service</label>
+                    <select id="serviceName">
+                        <option>Check-up</option>
+                        <option>Vaccination</option>
+                        <option>Grooming</option>
+                        <option>Dental Cleaning</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>Price (PHP) *</label>
+                    <input type="number" id="servicePrice" min="0" placeholder="Enter price">
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="primary" onclick="addService()">+ Add Service</button>
+            </div>
+
+            <div class="section-heading" style="margin-top:25px">
+                <h2>Service List</h2>
+            </div>
+            <div id="serviceList" class="record-list"></div>
+        </section>
+
+        <!-- MEDICINES -->
+        <section class="section" id="medicines">
+            <div class="section-heading">
+                <h2>💊 Medicines</h2>
+                <p>Track medicine stock and prices.</p>
+            </div>
+
+            <div class="form-grid">
+                <div class="field">
+                    <label>Medicine Name *</label>
+                    <input type="text" id="medicineName" placeholder="Medicine name">
+                </div>
+
+                <div class="field">
+                    <label>Quantity</label>
+                    <input type="number" id="quantity" min="0" placeholder="Enter quantity">
+                </div>
+
+                <div class="field">
+                    <label>Price (PHP)</label>
+                    <input type="number" id="medicinePrice" min="0" placeholder="Enter price">
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="primary" onclick="addMedicine()">+ Add Medicine</button>
+            </div>
+
+            <div class="section-heading" style="margin-top:25px">
+                <h2>Medicine List</h2>
+            </div>
+            <div id="medicineList" class="record-list"></div>
+        </section>
+
+        <!-- CLINIC CHARGES -->
+        <section class="section" id="charges">
+            <div class="section-heading">
+                <h2>₱ Clinic Charges</h2>
+                <p>Record charges connected to a pet.</p>
+            </div>
+
+            <div class="form-grid">
+                <div class="field">
+                    <label>Pet Name *</label>
+                    <input type="text" id="chargePet" placeholder="Enter pet name">
+                </div>
+
+                <div class="field">
+                    <label>Description</label>
+                    <input type="text" id="chargeDescription" placeholder="Charge description">
+                </div>
+
+                <div class="field">
+                    <label>Amount (PHP) *</label>
+                    <input type="number" id="chargeAmount" min="0" placeholder="Enter amount">
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="primary" onclick="addCharge()">+ Add Charge</button>
+            </div>
+
+            <div class="section-heading" style="margin-top:25px">
+                <h2>Charge Records</h2>
+            </div>
+            <div id="chargeList" class="record-list"></div>
+        </section>
+
+        <div class="footer">
+            Pet Clinic Management System · Saved in this browser
+        </div>
+    </main>
+
+    <script>
+        // ARRAYS
+        var allPets = [];
+        var allOwners = [];
+        var allConsultations = [];
+        var allServices = [];
+        var allMedicines = [];
+        var allCharges = [];
+
+        // SAVE DATA JSON
+        function saveData() {
+            var data = {
+                pets: allPets,
+                owners: allOwners,
+                consultations: allConsultations,
+                services: allServices,
+                medicines: allMedicines,
+                charges: allCharges
+            };
+
+            localStorage.setItem("petClinicData", JSON.stringify(data));
+            updateDashboard();
+        }
+
+        // LOAD SAVED DATA
+        function loadData() {
+            var savedData = localStorage.getItem("petClinicData");
+
+            if (savedData) {
+                var data = JSON.parse(savedData);
+
+                allPets = data.pets || [];
+                allOwners = data.owners || [];
+                allConsultations = data.consultations || [];
+                allServices = data.services || [];
+                allMedicines = data.medicines || [];
+                allCharges = data.charges || [];
+            } else {
+                allPets = [];
+                allOwners = [];
+                allConsultations = [];
+                allServices = [];
+                allMedicines = [];
+                allCharges = [];
+            }
+
+            showPets();
+            showOwners();
+            showConsultations();
+            showServices();
+            showMedicines();
+            showCharges();
+            updateDashboard();
+        }
+
+        // UPDATE DASHBOARD COUNTS
+        function updateDashboard() {
+            document.getElementById("petCount").innerHTML = allPets.length;
+            document.getElementById("ownerCount").innerHTML = allOwners.length;
+            document.getElementById("consultationCount").innerHTML = allConsultations.length;
+            document.getElementById("serviceCount").innerHTML = allServices.length;
+        }
+
+        function showEmptyMessage(elementId, message) {
+            document.getElementById(elementId).innerHTML =
+                '<div class="notice">' + message + '</div>';
+        }
+
+        // ADD PET
+        function addPet() {
+            var petName = document.getElementById("petName").value.trim();
+            var ownerName = document.getElementById("ownerName").value.trim();
+            var petType = document.getElementById("petType").value;
+            var breed = document.getElementById("breed").value.trim();
+            var age = document.getElementById("age").value;
+
+            if (petName == "" || ownerName == "") {
+                alert("Please enter the pet name and owner name.");
+            } else {
+                var pet = {
+                    petName: petName,
+                    ownerName: ownerName,
+                    petType: petType,
+                    breed: breed,
+                    age: age
+                };
+
+                allPets.push(pet);
+                saveData();
+                showPets();
+
+                document.getElementById("petName").value = "";
+                document.getElementById("ownerName").value = "";
+                document.getElementById("breed").value = "";
+                document.getElementById("age").value = "";
+
+                alert("Pet added successfully!");
+            }
+        }
+
+        // SHOW PETS
+        function showPets() {
+            var result = "";
+
+            if (allPets.length == 0) {
+                showEmptyMessage("petList", "No pet records yet.");
+            } else {
+                for (var i = 0; i < allPets.length; i++) {
+                    result += '<div class="record-card">';
+                    result += '<strong>🐾 ' + allPets[i].petName + '</strong><br>';
+                    result += '<span>Owner:</span> ' + allPets[i].ownerName + '<br>';
+                    result += '<span>Type:</span> ' + allPets[i].petType + '<br>';
+                    result += '<span>Breed:</span> ' + (allPets[i].breed || "Not provided") + '<br>';
+                    result += '<span>Age:</span> ' + (allPets[i].age || "Not provided") + '<br>';
+                    result += '<button class="delete-button" onclick="deletePet(' + i + ')">Delete Record</button>';
+                    result += '</div>';
+                }
+
+                document.getElementById("petList").innerHTML = result;
+            }
+
+            document.getElementById("searchResult").innerHTML = "Showing all pet records.";
+        }
+
+        // SEARCH PET OR OWNER
+        function searchPet() {
+            var search = document.getElementById("search").value.trim();
+            var result = "";
+            var found = false;
+
+            if (search == "") {
+                document.getElementById("searchResult").innerHTML =
+                    "Please enter a pet name or owner name.";
+                showPets();
+            } else {
+                for (var i = 0; i < allPets.length; i++) {
+                    if (
+                        allPets[i].petName.toLowerCase().indexOf(search.toLowerCase()) != -1 ||
+                        allPets[i].ownerName.toLowerCase().indexOf(search.toLowerCase()) != -1
+                    ) {
+                        result += '<div class="record-card">';
+                        result += '<strong>🐾 ' + allPets[i].petName + '</strong><br>';
+                        result += '<span>Owner:</span> ' + allPets[i].ownerName + '<br>';
+                        result += '<span>Type:</span> ' + allPets[i].petType + '<br>';
+                        result += '<span>Breed:</span> ' + (allPets[i].breed || "Not provided") + '<br>';
+                        result += '<span>Age:</span> ' + (allPets[i].age || "Not provided") + '<br>';
+                        result += '<button class="delete-button" onclick="deletePet(' + i + ')">Delete Record</button>';
+                        result += '</div>';
+                        found = true;
+                    }
+                }
+
+                if (found == true) {
+                    document.getElementById("petList").innerHTML = result;
+                    document.getElementById("searchResult").innerHTML = "Search results:";
+                } else {
+                    document.getElementById("petList").innerHTML = "";
+                    document.getElementById("searchResult").innerHTML =
+                        "No matching pet or owner found.";
+                }
+            }
+        }
+
+        // DELETE PET
+        function deletePet(index) {
+            var answer = confirm(
+                "Are you sure you want to delete " + allPets[index].petName + "?"
+            );
+
+            if (answer == true) {
+                allPets.splice(index, 1);
+                saveData();
+                showPets();
+                alert("Pet deleted successfully!");
+            } else {
+                alert("Delete cancelled.");
+            }
+        }
+
+        // ADD OWNER
+        function addOwner() {
+            var name = document.getElementById("newOwner").value.trim();
+            var contact = document.getElementById("contact").value.trim();
+            var address = document.getElementById("address").value.trim();
+
+            if (name == "") {
+                alert("Please enter the owner's name.");
+            } else {
+                var owner = {
+                    name: name,
+                    contact: contact,
+                    address: address
+                };
+
+                allOwners.push(owner);
+                saveData();
+                showOwners();
+
+                document.getElementById("newOwner").value = "";
+                document.getElementById("contact").value = "";
+                document.getElementById("address").value = "";
+
+                alert("Owner added successfully!");
+            }
+        }
+
+        // SHOW OWNERS
+        function showOwners() {
+            var result = "";
+
+            if (allOwners.length == 0) {
+                showEmptyMessage("ownerList", "No owner records yet.");
+            } else {
+                for (var i = 0; i < allOwners.length; i++) {
+                    result += '<div class="record-card">';
+                    result += '<strong>👤 ' + allOwners[i].name + '</strong><br>';
+                    result += '<span>Contact:</span> ' + (allOwners[i].contact || "Not provided") + '<br>';
+                    result += '<span>Address:</span> ' + (allOwners[i].address || "Not provided") + '<br>';
+                    result += '<button class="delete-button" onclick="deleteOwner(' + i + ')">Delete Record</button>';
+                    result += '</div>';
+                }
+
+                document.getElementById("ownerList").innerHTML = result;
+            }
+        }
+
+        // DELETE OWNER
+        function deleteOwner(index) {
+            var answer = confirm("Are you sure you want to delete " + allOwners[index].name + "?");
+
+            if (answer == true) {
+                allOwners.splice(index, 1);
+                saveData();
+                showOwners();
+                alert("Owner deleted successfully.");
+            } else {
+                alert("Delete cancelled.");
+            }
+        }
+
+        // ADD CONSULTATION
+        function addConsultation() {
+            var pet = document.getElementById("consultPet").value.trim();
+            var veterinarian = document.getElementById("veterinarian").value.trim();
+            var date = document.getElementById("consultDate").value;
+            var diagnosis = document.getElementById("diagnosis").value.trim();
+
+            if (pet == "") {
+                alert("Please enter the pet name.");
+            } else {
+                var consultation = {
+                    pet: pet,
+                    veterinarian: veterinarian,
+                    date: date,
+                    diagnosis: diagnosis
+                };
+
+                allConsultations.push(consultation);
+                saveData();
+                showConsultations();
+
+                document.getElementById("consultPet").value = "";
+                document.getElementById("veterinarian").value = "";
+                document.getElementById("consultDate").value = "";
+                document.getElementById("diagnosis").value = "";
+
+                alert("Consultation added successfully!");
+            }
+        }
+
+        // SHOW CONSULTATIONS
+        function showConsultations() {
+            var result = "";
+
+            if (allConsultations.length == 0) {
+                showEmptyMessage("consultationList", "No consultation records yet.");
+            } else {
+                for (var i = 0; i < allConsultations.length; i++) {
+                    result += '<div class="record-card">';
+                    result += '<strong>🩺 ' + allConsultations[i].pet + '</strong><br>';
+                    result += '<span>Veterinarian:</span> ' + (allConsultations[i].veterinarian || "Not provided") + '<br>';
+                    result += '<span>Date:</span> ' + (allConsultations[i].date || "Not provided") + '<br>';
+                    result += '<span>Diagnosis:</span> ' + (allConsultations[i].diagnosis || "Not provided") + '<br>';
+                    result += '<button class="delete-button" onclick="deleteConsultation(' + i + ')">Delete Record</button>';
+                    result += '</div>';
+                }
+
+                document.getElementById("consultationList").innerHTML = result;
+            }
+        }
+
+        // DELETE CONSULTATION
+        function deleteConsultation(index) {
+            var answer = confirm("Are you sure you want to delete this consultation?");
+
+            if (answer == true) {
+                allConsultations.splice(index, 1);
+                saveData();
+                showConsultations();
+                alert("Consultation deleted successfully.");
+            } else {
+                alert("Delete cancelled.");
+            }
+        }
+
+        // ADD SERVICE
+        function addService() {
+            var name = document.getElementById("serviceName").value;
+            var price = document.getElementById("servicePrice").value;
+
+            if (price == "" || Number(price) < 0) {
+                alert("Please enter a valid service price.");
+            } else {
+                var service = {
+                    name: name,
+                    price: price
+                };
+
+                allServices.push(service);
+                saveData();
+                showServices();
+
+                document.getElementById("servicePrice").value = "";
+                alert("Service added successfully!");
+            }
+        }
+
+        // SHOW SERVICES
+        function showServices() {
+            var result = "";
+
+            if (allServices.length == 0) {
+                showEmptyMessage("serviceList", "No extra services added yet.");
+            } else {
+                for (var i = 0; i < allServices.length; i++) {
+                    result += '<div class="record-card">';
+                    result += '<strong>✚ ' + allServices[i].name + '</strong><br>';
+                    result += '<span>Price:</span> PHP ' + Number(allServices[i].price).toFixed(2) + '<br>';
+                    result += '<button class="delete-button" onclick="deleteService(' + i + ')">Delete Service</button>';
+                    result += '</div>';
+                }
+
+                document.getElementById("serviceList").innerHTML = result;
+            }
+        }
+
+        // DELETE SERVICE
+        function deleteService(index) {
+            var answer = confirm("Are you sure you want to delete " + allServices[index].name + "?");
+
+            if (answer == true) {
+                allServices.splice(index, 1);
+                saveData();
+                showServices();
+                alert("Service deleted successfully.");
+            } else {
+                alert("Delete cancelled.");
+            }
+        }
+
+        // ADD MEDICINE
+        function addMedicine() {
+            var name = document.getElementById("medicineName").value.trim();
+            var quantity = document.getElementById("quantity").value;
+            var price = document.getElementById("medicinePrice").value;
+
+            if (name == "") {
+                alert("Please enter the medicine name.");
+            } else {
+                var medicine = {
+                    name: name,
+                    quantity: quantity,
+                    price: price
+                };
+
+                allMedicines.push(medicine);
+                saveData();
+                showMedicines();
+
+                document.getElementById("medicineName").value = "";
+                document.getElementById("quantity").value = "";
+                document.getElementById("medicinePrice").value = "";
+
+                alert("Medicine added successfully!");
+            }
+        }
+
+        // SHOW MEDICINES
+        function showMedicines() {
+            var result = "";
+
+            if (allMedicines.length == 0) {
+                showEmptyMessage("medicineList", "No medicines added yet.");
+            } else {
+                for (var i = 0; i < allMedicines.length; i++) {
+                    result += '<div class="record-card">';
+                    result += '<strong>💊 ' + allMedicines[i].name + '</strong><br>';
+                    result += '<span>Quantity:</span> ' + (allMedicines[i].quantity || "Not provided") + '<br>';
+                    result += '<span>Price:</span> PHP ' + (allMedicines[i].price ? Number(allMedicines[i].price).toFixed(2) : "Not provided") + '<br>';
+                    result += '<button class="delete-button" onclick="deleteMedicine(' + i + ')">Delete Medicine</button>';
+                    result += '</div>';
+                }
+
+                document.getElementById("medicineList").innerHTML = result;
+            }
+        }
+
+        // DELETE MEDICINE
+        function deleteMedicine(index) {
+            var answer = confirm("Are you sure you want to delete " + allMedicines[index].name + "?");
+
+            if (answer == true) {
+                allMedicines.splice(index, 1);
+                saveData();
+                showMedicines();
+                alert("Medicine deleted successfully.");
+            } else {
+                alert("Delete cancelled.");
+            }
+        }
+
+        // ADD CLINIC CHARGE
+        function addCharge() {
+            var pet = document.getElementById("chargePet").value.trim();
+            var description = document.getElementById("chargeDescription").value.trim();
+            var amount = document.getElementById("chargeAmount").value;
+
+            if (pet == "" || amount == "" || Number(amount) < 0) {
+                alert("Please enter the pet name and a valid amount.");
+            } else {
+                var charge = {
+                    pet: pet,
+                    description: description,
+                    amount: amount
+                };
+
+                allCharges.push(charge);
+                saveData();
+                showCharges();
+
+                document.getElementById("chargePet").value = "";
+                document.getElementById("chargeDescription").value = "";
+                document.getElementById("chargeAmount").value = "";
+
+                alert("Charge added successfully!");
+            }
+        }
+
+        // SHOW CHARGES
+        function showCharges() {
+            var result = "";
+
+            if (allCharges.length == 0) {
+                showEmptyMessage("chargeList", "No clinic charges added yet.");
+            } else {
+                for (var i = 0; i < allCharges.length; i++) {
+                    result += '<div class="record-card">';
+                    result += '<strong>₱ ' + allCharges[i].pet + '</strong><br>';
+                    result += '<span>Description:</span> ' + (allCharges[i].description || "Not provided") + '<br>';
+                    result += '<span>Total Charge:</span> PHP ' + Number(allCharges[i].amount).toFixed(2) + '<br>';
+                    result += '<button class="delete-button" onclick="deleteCharge(' + i + ')">Delete Charge</button>';
+                    result += '</div>';
+                }
+
+                document.getElementById("chargeList").innerHTML = result;
+            }
+        }
+
+        // DELETE CHARGE
+        function deleteCharge(index) {
+            var answer = confirm("Are you sure you want to delete this charge?");
+
+            if (answer == true) {
+                allCharges.splice(index, 1);
+                saveData();
+                showCharges();
+                alert("Charge deleted successfully.");
+            } else {
+                alert("Delete cancelled.");
+            }
+        }
+
+        // SHOW TODAY'S DATE
+        document.getElementById("todayDate").innerHTML =
+            new Date().toLocaleDateString("en-PH", {
+                year: "numeric",
+                month: "short",
+                day: "numeric"
+            });
+
+        // LOAD SAVED DATA
+        loadData();
+    </script>
+
+</body>
+</html>
